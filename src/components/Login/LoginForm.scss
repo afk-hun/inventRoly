@@ -1,0 +1,17 @@
+.Login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .LoginForm {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20rem;
+
+    .LoginForm-textfield {
+      margin: 1rem;
+    }
+  }
+}

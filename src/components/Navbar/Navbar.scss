@@ -1,0 +1,26 @@
+@import "/src/utils/basic.scss";
+.Navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .Navbar-title {
+    padding-left: 1rem;
+    width: 100%;
+  }
+
+  .Navbar-links {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+  }
+
+  .Navbar-listitem {
+    @include list-item-clear();
+    padding: 1rem;
+  }
+
+  .Navlink {
+    text-decoration: none;
+  }
+}

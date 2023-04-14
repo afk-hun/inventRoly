@@ -1,0 +1,8 @@
+.ResultItem {
+  display: flex;
+  flex-direction: row;
+  .ResultItem-details {
+    display: flex;
+    flex-direction: column;
+  }
+}
