@@ -1,5 +1,6 @@
 import { redirect } from "react-router-dom";
 import Registration from "../components/Registration/Registration";
+import { log } from "console";
 
 const RegistrationPage = () => {
   return <Registration />;
@@ -32,5 +33,6 @@ export async function action({ request }: any) {
   if (response.status === 409) {
     return response;
   }
-  redirect("/");
+
+  redirect("/auth/login");
 }

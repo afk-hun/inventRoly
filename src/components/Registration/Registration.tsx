@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
-import { Button, TextField } from "@mui/material";
-import React, { ChangeEvent, FC, FocusEvent, useState } from "react";
+import { TextField } from "@mui/material";
+import { FC, FormEvent } from "react";
 import {
   Form,
   useActionData,
@@ -8,38 +8,67 @@ import {
   useNavigation,
 } from "react-router-dom";
 import "./Registration.scss";
-
-type InputTextAndBlur = {
-  enteredText: string;
-  inputBlur: boolean;
-};
+import useInput from "../../utils/hooks/useInput";
+import { action } from "../../pages/RegisrationPage";
 
 interface RegistrationProps {}
 
-const Registration: FC<RegistrationProps> = () => {
-  const [firstName, setFirstName] = useState<InputTextAndBlur>({
-    enteredText: "",
-    inputBlur: false,
-  });
-  const [lastName, setLastName] = useState<InputTextAndBlur>({
-    enteredText: "",
-    inputBlur: false,
-  });
-  const [email, setEmail] = useState<InputTextAndBlur>({
-    enteredText: "",
-    inputBlur: false,
-  });
-  const [password, setPassword] = useState<InputTextAndBlur>({
-    enteredText: "",
-    inputBlur: false,
-  });
-  const [password2, setPassword2] = useState<InputTextAndBlur>({
-    enteredText: "",
-    inputBlur: false,
-  });
+const isNotEmpty = (value: string) => value.trim() !== '';
+const isEmail = (value: string) => value.includes('@');
 
-  const data = useActionData();
-  console.log(data);
+const Registration: FC<RegistrationProps> = () => {
+
+  const {
+    value: firstName,
+    isValid: firstNameIsvalid,
+    hasError: firstNameHasError,
+    valueChangeHandler: firstNameChangeHandler,
+    inputBlurHandler: firstNameBlurHandler,
+    reset: resetFirstName
+  } = useInput(isNotEmpty);
+
+const {
+    value: lastName,
+    isValid: lastNameIsvalid,
+    hasError: lastNameHasError,
+    valueChangeHandler: lastNameChangeHandler,
+    inputBlurHandler: lastNameBlurHandler,
+    reset: resetLastName
+  } = useInput(isNotEmpty);
+
+  const {
+    value: email,
+    isValid: emailIsvalid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmail
+  } = useInput(isEmail);
+
+  const {
+    value: password,
+    isValid: passwordIsvalid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: resetPassword
+  } = useInput(isNotEmpty);
+
+  const {
+    value: password2,
+    isValid: password2Isvalid,
+    hasError: password2HasError,
+    valueChangeHandler: password2ChangeHandler,
+    inputBlurHandler: password2BlurHandler,
+    reset: resetPassword2
+  } = useInput(isNotEmpty);
+
+  // const data = useActionData() as ReturnType<typeof action>;
+  // data?.then((res) => {
+  //   console.log(res)
+  // });
+  // TODO missing error handling
+
 
   const navigation = useNavigation();
   const navigate = useNavigate();
@@ -49,44 +78,28 @@ const Registration: FC<RegistrationProps> = () => {
     navigate("/auth");
   };
 
-  const firstNameIsvalid =
-    firstName.enteredText.trim() !== "" && firstName.inputBlur;
-  const lasstNameIsvalid =
-    lastName.enteredText.trim() !== "" && lastName.inputBlur;
-  const emailIsvalid = email.enteredText.includes("@") && email.inputBlur;
-  const passwordIsvalid =
-    password.enteredText.trim() !== "" && password.inputBlur;
-  const password2Isvalid =
-    password2.enteredText.trim() !== "" && password2.inputBlur;
+  const passwordsHasError: boolean = !password2HasError && !passwordHasError && passwordIsvalid && password2Isvalid && password !== password2
+  const formIsValid: boolean = firstNameIsvalid && lastNameIsvalid && emailIsvalid && passwordIsvalid && password2Isvalid;
+  
+  const onSubmitHandler = (event: FormEvent<HTMLFormElement> | undefined) => {
+    event?.preventDefault();
 
-  const nameInputChangeHandler = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFirstName({
-      ...firstName,
-      enteredText: event.target.value,
-    });
-  };
+    if (!formIsValid) return;
 
-  const nameInputBlurHandler = (
-    event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFirstName({
-      ...firstName,
-      inputBlur: true,
-    });
-  };
-
-  const onSubmitHandler = () => {
-    setFirstName({ enteredText: "", inputBlur: false });
+    resetFirstName();
+    resetLastName();
+    resetEmail();
+    resetPassword();
+    resetPassword2();
   };
 
   return (
     <div className="Registration">
+      <p>To use the awesome INVENTORY app, you have to register. Just do it and enjoy the future.</p>
       <Form
         className="RegistrationForm"
         method="post"
-        onSubmit={onSubmitHandler}
+        //onSubmit={onSubmitHandler}
       >
         <TextField
           className="LoginForm-textfield"
@@ -94,15 +107,16 @@ const Registration: FC<RegistrationProps> = () => {
           type="text"
           name="firstname"
           label="First Name"
-          //defaultValue="John"
+          error={firstNameHasError}
+          //value={firstName}
+          helperText={firstNameHasError ? "Please add your Firs Name" : undefined}
           variant="outlined"
           size="small"
           required
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
+          onChange={firstNameChangeHandler}
+          onBlur={firstNameBlurHandler}
+          defaultValue="afk"
         />
-
-        {!firstNameIsvalid && <p>Please add a valid name</p>}
 
         <TextField
           className="LoginForm-textfield"
@@ -110,10 +124,15 @@ const Registration: FC<RegistrationProps> = () => {
           type="text"
           name="lastname"
           label="Last Name"
-          //defaultValue="Doe"
+          error={lastNameHasError}
+          //value={lastName}
+          helperText={lastNameHasError ? "Please add your Last Name" : undefined}
           variant="outlined"
           size="small"
           required
+          onChange={lastNameChangeHandler}
+          onBlur={lastNameBlurHandler}
+          defaultValue="afk"
         />
 
         <TextField
@@ -122,31 +141,49 @@ const Registration: FC<RegistrationProps> = () => {
           type="email"
           name="email"
           label="E-mail"
-          //defaultValue="user@example.com"
+          error={emailHasError}
+          //value={email}
+          helperText={emailHasError ? "Please add your email address with @ sign" : undefined}
           variant="outlined"
           size="small"
           required
+          onChange={emailChangeHandler}
+          onBlur={emailBlurHandler}
+          defaultValue="user@example.com"
         />
+
         <TextField
           className="LoginForm-textfield"
           id="password"
           type="password"
           name="password"
           label="Password"
-          //defaultValue="stringst"
+          error={passwordHasError}
+          //value={password}
+          helperText={passwordHasError ? "Please add a password" : undefined}
           size="small"
           required
+          onChange={passwordChangeHandler}
+          onBlur={passwordBlurHandler}
+          defaultValue="stringst"
         />
+
         <TextField
           className="LoginForm-textfield"
           id="password2"
           type="password"
           name="password2"
           label="Password again"
-          //defaultValue="stringst"
+          error={password2HasError || passwordsHasError}
+          //value={password2}
+          helperText={password2HasError ? "Please repeat your password" : passwordsHasError ? "Passwords are not the same" : undefined  }
           size="small"
           required
+          onChange={password2ChangeHandler}
+          onBlur={password2BlurHandler}
+          defaultValue="stringst"
         />
+
         <LoadingButton
           sx={{ width: "10rem" }}
           loading={isSubmitting ? true : false}
@@ -155,6 +192,7 @@ const Registration: FC<RegistrationProps> = () => {
           variant="outlined"
           size="medium"
           fullWidth={true}
+          //disabled={!formIsValid}
         >
           Register
         </LoadingButton>

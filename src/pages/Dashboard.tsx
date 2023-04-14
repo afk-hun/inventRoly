@@ -5,7 +5,7 @@ const Dashboard = () => {
   const token = useRouteLoaderData("root");
   return (
     <>
-      Welcome to Leltár app. Somedays here will appear your household.
+      Welcome to INVENTORY app. Somedays here will appear your household.
       {!token && <p>Please login to earn the barcode search function </p>}
     </>
   );

@@ -14,25 +14,31 @@ export type useInputState = {
   reset: () => void;
 };
 
-const initialInputState = {
+
+type inputState = {
+  value: string,
+  isTouched: boolean
+}
+
+const initialInputState: inputState = {
   value: "",
   isTouched: false,
 };
 
 type ACTIONTYPE =
   | { type: "INPUT"; payload: string }
-  | { type: "BLUR"; payload: string }
-  | { type: "RESET"; payload: string };
+  | { type: "BLUR"; }
+  | { type: "RESET"; };
 
 function inputStateReducer(
-  state: typeof initialInputState,
+  state: inputState,
   action: ACTIONTYPE
-) {
+): inputState {
   switch (action.type) {
     case "INPUT":
       return { value: action.payload, isTouched: state.isTouched };
     case "BLUR":
-      return { value: state.value, isTouched: action.payload };
+      return { value: state.value, isTouched: true };
     case "RESET":
       return { value: "", isTouched: false };
     default:
@@ -40,29 +46,32 @@ function inputStateReducer(
   }
 }
 
-const useInput = (validateInput: () => {}): useInputState => {
+const useInput = (validateInput: (value: string) => boolean): useInputState => {
   const [state, dispatch] = useReducer(inputStateReducer, initialInputState);
-  //   const [inputState, inputDispach] = useReducer(
-  //     inputStateReducer,
-  //     initialInputState
-  //   );
+
+  const valueIsValid = validateInput(state.value);
+  const hasError: boolean = !valueIsValid && state.isTouched;
 
   const valueChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    //dispatch();
+    dispatch({type: "INPUT", payload: event.target.value});
   };
 
   const inputBlur = (
     event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {};
+  ) => {
+    dispatch({type: "BLUR"});
+  };
 
-  const reset = () => {};
+  const reset = () => {
+    dispatch({type: "RESET"});
+  };
 
   return {
-    value: "",
-    isValid: false,
-    hasError: false,
+    value: state.value,
+    isValid: valueIsValid,
+    hasError: hasError,
     valueChangeHandler: valueChange,
     inputBlurHandler: inputBlur,
     reset: reset,

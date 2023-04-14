@@ -6,16 +6,18 @@ interface NavbarProps {}
 
 const Navbar = () => {
   const token = useRouteLoaderData("root") as string | null; //localStorage.getItem("token");
-  console.log("Navbar token: " + token);
+  //console.log("Navbar token: " + token);
+
+  const user: string|null = localStorage.getItem("user");
 
   const logIn = (
-    <NavLink to="/auth" style={{ textDecoration: "none" }}>
+    <NavLink to="/auth/login" style={{ textDecoration: "none" }}>
       <Button variant="contained">Login</Button>
     </NavLink>
   );
 
   const logOut = (
-    <Form action="/logout" method="post">
+    <Form action="/auth/logout" method="post">
       <Button variant="contained" type="submit">
         Logout
       </Button>
@@ -24,7 +26,8 @@ const Navbar = () => {
 
   return (
     <div className="Navbar">
-      <h2 className="Navbar-title">lelTár</h2>
+      <div className="Navbar-container">
+      <h2 className="Navbar-title">INVENTORY</h2>
       <ul className="Navbar-links">
         <li className="Navbar-listitem">
           <NavLink to="/" end style={{ textDecoration: "none" }}>
@@ -43,6 +46,8 @@ const Navbar = () => {
           {!token && logIn}
         </li>
       </ul>
+      </div>
+      <div className="Navbar-user">{user}</div>
     </div>
   );
 };

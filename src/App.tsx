@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     loader: tokenLoader,
     children: [
       { path: "", element: <Dashboard /> },
-      { path: "auth", element: <Login />, action: loginAction },
+      { path: "auth/login", element: <Login />, action: loginAction },
       {
         path: "auth/registration",
         element: <RegistrationPage />,
@@ -34,9 +34,10 @@ const router = createBrowserRouter([
         element: <BarcodePage />,
       },
       {
-        path: "logout",
+        path: "auth/logout",
         action: () => {
           localStorage.removeItem("token");
+          localStorage.removeItem("user");
           return redirect("/");
         },
       },

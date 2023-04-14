@@ -2,25 +2,38 @@
 .Navbar {
   width: 100%;
   display: flex;
-  align-items: center;
-
-  .Navbar-title {
-    padding-left: 1rem;
+  flex-direction: column;
+  //align-items: center;
+  
+  .Navbar-container {
     width: 100%;
-  }
-
-  .Navbar-links {
     display: flex;
-    flex-direction: row;
-    padding: 0;
-  }
+    align-items: center;
 
-  .Navbar-listitem {
-    @include list-item-clear();
-    padding: 1rem;
+    .Navbar-title {
+      padding-left: 1rem;
+      width: 100%;
+    }
+  
+    .Navbar-links {
+      display: flex;
+      flex-direction: row;
+      padding: 0;
+    }
+  
+    .Navbar-listitem {
+      @include list-item-clear();
+      padding: 1rem;
+    }
+  
+    .Navlink {
+      text-decoration: none;
+    }
   }
-
-  .Navlink {
-    text-decoration: none;
+  .Navbar-user{
+    text-align: right;
+    margin-top: -1rem;
+    margin-right: 1rem;
+    top: -1rem
   }
 }

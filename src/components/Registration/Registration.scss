@@ -1,7 +1,17 @@
 .Registration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .RegistrationForm {
+    margin: 1rem;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    align-items: center;
+
+    .LoginForm-textfield {
+      margin: 1rem;
+      width: 24rem;
+    }
   }
 }

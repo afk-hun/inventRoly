@@ -15,7 +15,7 @@ const LoginForm = () => {
 
   return (
     <div className="Login-container">
-      Please login to use the awesome LELTÁR app 😄
+      Please login to use the awesome INVERTORY app 😄
       <Form className="LoginForm" method="post">
         <TextField
           className="LoginForm-textfield"
